@@ -76,17 +76,23 @@ graph TD
     UI[Experience Layer: Streamlit] -->|User Input| LG[Orchestrator: LangGraph]
     
     subgraph Multi-Agent Brain
-        LG --> SM[Stage Manager Node]
-        SM --> PA[Primary Agent Node]
-        PA <-->|ReAct Loop| CL[Claude 3.5 Sonnet]
+        LG --> SM[Supervisor: Stage Manager]
+        
+        subgraph Specialized CrewAI Swarms
+            SM -->|Intake| CA[The Concierge]
+            SM -->|Out of Stock| RS[The Recovery Swarm]
+            SM -->|Tracking| LS[The Logistics Sentinel]
+            SM -->|Post-Purchase| PE[The Policy Enforcer]
+        end
+        
+        CA & RS & LS & PE <-->|ReAct Loop| CL[Claude 3.5 Sonnet]
     end
     
     subgraph Enterprise Data Bridge
-        PA -->|Executes| MCP[MCP Tools Layer]
-        MCP --> T1(Customer Profile)
-        MCP --> T2(Live Inventory)
-        MCP --> T3(Logistics API)
-        MCP --> T4(ERP / Payment)
+        CA --> T1(Customer Profile)
+        RS --> T2(Live Inventory)
+        LS --> T3(Logistics API)
+        PE --> T4(ERP / Payment)
     end
     
-    MCP <-->|Live SQL| SNOW[(Snowflake Lakehouse)]
+    T1 & T2 & T3 & T4 <-->|MCP Protocol| SNOW[(Snowflake Lakehouse)]
