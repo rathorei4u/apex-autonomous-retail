@@ -1,0 +1,15 @@
+[project]
+name = "agentic-retail-demo"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "crewai>=1.14.4",
+    "langchain-anthropic>=1.4.2",
+    "langgraph>=1.1.10",
+    "mcp>=1.26.0",
+    "python-dotenv>=1.2.2",
+    "snowflake-connector-python>=4.4.0",
+    "streamlit>=1.57.0",
+]

@@ -1,0 +1,11 @@
+SKU,NAME,CATEGORY,PRICE,STOCK,DESCRIPTION
+APEX-BOOK-PRO,ApexBook Pro,Laptops,2499,0,High performance 16 inch laptop
+APEX-BOOK-AIR,ApexBook Air,Laptops,1199,15,Ultra portable 13 inch laptop
+APEX-TAB-ULTRA,ApexTab Ultra,Tablets,899,8,Creative tablet with Pro display
+APEX-TAB-MINI,ApexTab Mini,Tablets,499,25,Compact 8 inch tablet
+APEX-PHONE-Z,ApexPhone Z-Fold,Phones,1799,3,Foldable smartphone with triple camera
+APEX-PHONE-S,ApexPhone S-Series,Phones,999,12,Premium flagship smartphone
+APEX-WATCH-PRO,ApexWatch Pro,Wearables,399,10,Advanced health tracking smartwatch
+APEX-WATCH-FIT,ApexWatch Fit,Wearables,199,30,Sleek fitness tracker
+APEX-BUDS-PRO,ApexBuds Pro,Audio,249,50,Noise canceling wireless earbuds
+APEX-CHARGE-HUB,ApexCharge Hub,Accessories,79,100,Universal 100W charging station
