@@ -1,0 +1,126 @@
+**1. Executive Summary**
+The True Agentic Commerce Architecture decouples conversational UI from enterprise business logic by utilizing a Supervisor-Worker Paradigm.
+Instead of relying on a single monolithic LLM prompt, this system uses LangGraph as a stateful orchestrator that delegates complex tasks to highly specialized CrewAI Swarms. These swarms communicate via strict A2A (Agent-to-Agent) JSON protocols and execute actions securely against the Snowflake Data Cloud using the Model Context Protocol (MCP).
+
+**2. Core Technology Stack**
+Experience Layer: Streamlit (Multi-Modal Voice + Chat, Dynamic UI generation).
+
+State & Governance (The Supervisor): LangGraph (Manages session memory, routing, and Human-in-the-Loop checkpoints).
+
+Agentic Collaboration (The Workers): CrewAI (Creates specialized agent crews that debate and collaborate to solve sub-tasks).
+
+Integration Standard: Model Context Protocol (MCP) servers (Provides a standardized, secure bridge to enterprise APIs).
+
+Data Lakehouse: Snowflake (Customer 360, Live Inventory, Order Management).
+
+**3. High-Level System Architecture**
+This diagram illustrates how the experience layer routes through the LangGraph Supervisor, which then orchestrates the CrewAI swarms. The swarms exclusively interact with enterprise data via the standardized MCP layer.
+
+
+graph TD
+    %% Define Styles
+    classDef ui fill:#f9f6fa,stroke:#d6b4fc,stroke-width:2px;
+    classDef orchestrator fill:#e6f2ff,stroke:#6baed6,stroke-width:2px;
+    classDef crew fill:#e2f0cb,stroke:#8bd346,stroke-width:2px;
+    classDef mcp fill:#ffe6cc,stroke:#ffb347,stroke-width:2px;
+    classDef data fill:#f4f4f8,stroke:#a6a6a6,stroke-width:2px;
+
+    subgraph Client [Experience Layer]
+        UI[Streamlit Multi-Modal UI<br/>Voice / Text / Dynamic Widgets]:::ui
+    end
+
+    subgraph Orchestration [LangGraph Orchestrator]
+        SM[Supervisor Node<br/>Intent Routing & State Memory]:::orchestrator
+        HITL[Governance Checkpoint<br/>Manager Approval Node]:::orchestrator
+    end
+
+    subgraph Swarms [CrewAI Specialized Swarms]
+        SC[Sales & Discovery Crew<br/>Agents: Concierge, Upseller]:::crew
+        RC[Fulfillment Recovery Crew<br/>Agents: Inventory Analyst, Margin Calculator]:::crew
+        LC[Post-Purchase Crew<br/>Agents: Policy Enforcer, Logistics Sentinel]:::crew
+    end
+
+    subgraph Integration [MCP Protocol Layer]
+        MCPS[Snowflake MCP Server]:::mcp
+        MCPE[ERP / Payment MCP Server]:::mcp
+        MCPSL[Slack / Comms MCP Server]:::mcp
+    end
+
+    subgraph Enterprise [Data Platform]
+        SNOW[(Snowflake Data Cloud)]:::data
+        ERP[(External ERP)]:::data
+    end
+
+    %% Connections
+    UI <-->|User Input / UI Render| SM
+    SM -->|Delegate via A2A Protocol| SC
+    SM -->|Delegate via A2A Protocol| RC
+    SM -->|Delegate via A2A Protocol| LC
+    
+    SC & RC & LC <-->|Execute Tools| Integration
+    
+    MCPS <-->|Live Queries| SNOW
+    MCPE <-->|Transactions| ERP
+    
+    RC -.->|Triggers Pause| HITL
+    HITL -.->|Resume Execution| RC
+
+
+**4. The Agentic Flow (A2A Collaboration & Resolution) **
+The High-Impact Demo Scenario: A VIP B2B customer wants to order 50 laptops for a new office. The primary warehouse only has 30. Instead of failing the order, the LangGraph Supervisor wakes up the Fulfillment Recovery Crew.
+
+The Inventory Analyst Agent finds 20 laptops in a secondary warehouse.
+
+The Logistics Agent calculates a $500 expedited shipping fee to combine them.
+
+The Margin Calculator Agent checks the customer's Platinum status and agrees to absorb the $500 fee to save a $100,000 deal.
+
+Before finalizing, it hits the LangGraph HITL Checkpoint for the Account Executive to click "Approve."
+
+Sequence Diagram: Agent-to-Agent (A2A) Collaboration
+
+
+sequenceDiagram
+    autonumber
+    actor User
+    participant LG as LangGraph Supervisor
+    box rgb(226, 240, 203) CrewAI: Fulfillment Recovery Swarm
+        participant IA as Inventory Agent
+        participant MA as Margin Agent
+    end
+    participant MCP as MCP Layer (Snowflake)
+    participant UI as Streamlit UI (HITL)
+
+    User->>LG: "I need 50 Apex M5 Laptops for the new branch."
+    LG->>LG: Update State (Intent: Bulk Order)
+    LG->>IA: Delegate Task (JSON Payload: sku=APEX-1001, qty=50)
+    
+    rect rgb(240, 248, 255)
+        Note over IA, MCP: A2A Data Gathering
+        IA->>MCP: check_inventory(sku=APEX-1001)
+        MCP-->>IA: {"WH-1": 30, "WH-2": 20}
+        IA->>MA: A2A Message: "Split shipment required. Extra logistics cost: $500. Advise."
+        MA->>MCP: get_customer_profile(customer_id)
+        MCP-->>MA: {"tier": "Platinum", "LTV": "$500k"}
+        MA->>IA: A2A Message: "Customer is Platinum. Absorb the $500 cost to save the margin."
+    end
+
+    IA->>LG: Return Resolution Plan (JSON: Absorb cost, split ship)
+    
+    LG->>UI: ⚠️ HITL PAUSE: Margin Exception Detected
+    Note over User, UI: Manager reviews the CrewAI debate log in the UI.
+    User->>UI: Clicks "Approve Override"
+    UI->>LG: Resume execution
+    
+    LG->>MCP: process_payment() & create_order()
+    LG-->>User: Render Rich Cart UI & Confirmation message
+
+
+**5. Why this Architecture Wins (Talking Points for the Panel)**
+When you present this architecture to the Salesforce panel, focus on these three pillars:
+
+True Agentic Collaboration (CrewAI + LangGraph): "Salesforce Agentforce is excellent for single-agent tasks. But enterprise commerce requires debate. By nesting CrewAI within LangGraph, we enable agents with conflicting goals (e.g., an Inventory Agent trying to ship fast vs. a Margin Agent trying to save money) to debate and find the optimal business outcome before presenting it to the user."
+
+Standardized Integration (MCP): "We don't write custom API wrappers for every LLM. By using the Model Context Protocol (MCP), our Snowflake data and ERP systems become instantly securely discoverable by any agent in the swarm."
+
+Controllable Autonomy (HITL): "We leverage LangGraph's state machine to inject Human-in-the-Loop checkpoints. The AI swarm has the autonomy to solve the out-of-stock puzzle, but enterprise governance dictates a human must approve margin exceptions. This is responsible AI."
