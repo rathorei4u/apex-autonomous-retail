@@ -37,10 +37,10 @@ When designing multi-agent systems, architects must choose between Decentralized
 
 ## Agents Registry
 Instead of disparate scripts, the system relies on dynamic personas executed by the primary reasoning engine:
-- **The Concierge:** Handles discovery, configuration, and upsells (ApexCare+).
-- **The Recovery Swarm:** Authorized to perform margin-aware resolutions (e.g., deducting 200 Loyalty Points for an Ultra upgrade).
-- **The Logistics Sentinel:** Monitors external carrier telemetry and executes reroutes (e.g., bypassing a Memphis storm via DHL).
-- **The Policy Enforcer:** Validates warehouse picking status before executing instant ERP cancellations.
+- **Concierge Agent:** Handles discovery, configuration, and upsells (ApexCare+).
+- **Recovery Swarm Agent:** Authorized to perform margin-aware resolutions (e.g., deducting 200 Loyalty Points for an Ultra upgrade).
+- **Logistics Sentinel Agent:** Monitors external carrier telemetry and executes reroutes (e.g., bypassing a Memphis storm via DHL).
+- **Policy Enforcer Agent:** Validates warehouse picking status before executing instant ERP cancellations.
 
 ## Memory
 The architecture utilizes a Dual-Memory design to prevent "Agent Amnesia":
