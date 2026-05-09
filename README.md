@@ -252,29 +252,86 @@ Operating GenAI in a transactional environment requires absolute transparency in
 
 ## Flow Diagrams
 Detailed sequence diagrams mapping the AXP and UCP protocol handoffs between the User, the Agentic Orchestrator, and the Merchant Backend can be found in our comprehensive documentation:
-👉 **[View Full Architecture Flow Diagrams](docs/flow-diagrams.md)**
+
+Detailed flow diagrams for AXP integration into UCP flows can be found in docs/flow-diagrams.md:
+* Scenario 1: Product Discovery with Recommendation Engine
+* Scenario 2: Configurable Product with Embedded Experience
+* Scenario 3: Checkout Flow with AXP-Enriched Products
+* Scenario 4: Inventory Issues & Governance Override
+* Scenario 5: The Logistics Handoff & Address Rerouting
+
+
+# AXP Flow Diagrams
+
+This document shows how the Agentic Experience Protocol (AXP) and Universal Checkout Protocol (UCP) integrate to orchestrate a complete enterprise Agentic Commerce lifecycle.
+
+## Overview: AXP + UCP Architecture
+
+```mermaid
+flowchart TD
+    subgraph AI [AGENTIC INTERFACE]
+        direction TB
+        A[AI Assistant / Shopping Agent]
+    end
+
+    subgraph PL [PROTOCOL LAYER]
+        direction LR
+        subgraph AXP [AXP]
+            direction TB
+            axp_list["• Product Data<br>• Quality Signals<br>• Embedded Experiences<br>• Trust Information"]
+        end
+        subgraph UCP [UCP]
+            direction TB
+            ucp_list["• Checkout Sessions<br>• Payment Processing<br>• Order Management<br>• Identity Linking"]
+        end
+        AXP <--> UCP
+    end
+
+    subgraph MB [MERCHANT BACKEND]
+        direction LR
+        cat[Product<br>Catalog]
+        rev[Review<br>System]
+        exp[Experience<br>Platform]
+        com[Commerce Engine<br>& Snowflake Data Cloud]
+    end
+
+    AI --> PL
+    PL --> MB
+    
+    classDef plain fill:#f9f9f9,stroke:#333,stroke-width:1px,color:#000;
+    class AI,PL,MB,AXP,UCP plain;
+    class A,axp_list,ucp_list,cat,rev,exp,com plain;
+```
 
 ---
 
-## Agentic Flow & Collaboration
-The central `routing_logic` acts as the Swarm Manager. Instead of relying on the LLM to choose its own next step (which causes hallucination in commerce flows), we use keyword/intent mapping against the user's latest Multi-Modal interaction. 
-This deterministic routing guarantees that a Discovery Agent cannot accidentally execute a Billing function, providing enterprise-grade reliability.
+## Agents Communication
+To prevent hallucination and logic drift, agents in the Apex architecture do not communicate via unstructured, free-flowing text. All interactions are strictly typed and bound by protocol schemas:
+
+* **Inter-Agent Communication (The State Machine):** Specialized agents collaborate by mutating a globally shared, strictly typed LangGraph `OrderState`. When the Inventory Agent resolves a stock issue, it updates the state graph programmatically, allowing the Checkout Agent to inherit pristine, structured context.
+* **Agent-to-System Communication (Backend):** Agents retrieve and mutate enterprise data exclusively by invoking **MCP Tools**. This standardizes all database queries (e.g., Snowflake commits, DHL tracking) into governed, observable API requests.
+* **Agent-to-Client Communication (Frontend):** Agents mutate the user interface by outputting strict **AXP/UCP JSON Payloads**. The LLM's output is deterministically parsed, and only the validated JSON payload is forwarded to the presentation layer.
 
 ---
 
-## Design & Architecture Deep Dive
-### The Server-Driven Agentic UI
-The frontend contains no hardcoded product pages. Instead, the `render_html_storefront()` function acts as a receiver. When the LLM outputs `"axp_action": "render_recovery"`, the frontend dynamically constructs the HTML/CSS Grid for the Exception/Concierge card. 
+## Observability & Evaluation
+Operating GenAI in a transactional environment requires absolute transparency into the model's decision-making process:
 
-### Voice Integration
-The application utilizes a background threaded `SpeechRecognition` module. It captures local mic input, transcribes it via advanced audio models, and injects it directly into the LangGraph state machine, allowing the user to browse, review, and authorize payments without touching a keyboard.
+* **Real-Time State Telemetry:** Every node transition in the LangGraph state machine updates a deterministic `Network Status` indicator in the frontend UI. This gives the user (and developers) immediate visual feedback on which specialized agent currently holds the execution context.
+* **Zero-Trust MCP Audit Trails:** Because all backend requests (inventory checks, address changes, payments) pass through the Model Context Protocol, IT security teams retain a centralized, immutable audit log of exactly which databases the AI queried and what parameters it passed.
+* **Semantic vs. Syntactic Evaluation:** By strictly separating the conversational response from the AXP JSON payload, our observability stack can independently evaluate the agent's tone/empathy against its technical execution accuracy.
 
 ---
 
-## Enterprise Standards
-* **Idempotency:** Billing and Fulfillment swarms execute Snowflake commits idempotently, preventing duplicate orders.
-* **Stateless Microservices:** The LangGraph backend operates completely statelessly. The entire context is passed via `OrderState`.
-* **Data Privacy:** No PII is included in the AI system prompts. Addresses and Order IDs are dynamically fetched via MCP and merged into the UI at the presentation layer.
+## Security & Governance
+*Enterprise Panel Highlight:* Integrating frontier foundation models into supply chain and checkout flows introduces unique security and alignment challenges. This architecture implements robust mitigations:
+
+1. **Constitutional AI & Dark Pattern Avoidance:** * *The Challenge:* During development, Anthropic's Claude 3.5 safety filters actively rejected prompts that simulated inventory scarcity coupled with an immediate upsell, flagging it as a deceptive e-commerce "Dark Pattern."
+   * *The Mitigation:* We established a strict **[INTERNAL DEMO MODE]** context boundary within the system prompts. By explicitly framing the workflow as a secure, authorized response to a legitimate backend API flag, we aligned the architecture with the LLM’s Constitutional safety guardrails, proving a deep understanding of AI alignment in production.
+2. **The MCP Security Boundary:** * *The Challenge:* Hardcoding database passwords or ERP API keys into an LLM's context window exposes the enterprise to Prompt Injection data exfiltration.
+   * *The Mitigation:* Using the Model Context Protocol, the LLM never sees raw credentials. It merely semantic requests a tool execution from the local MCP server, ensuring the host system maintains absolute Identity and Access Management (IAM) control.
+3. **Bulletproof Payload Extraction:** * *The Challenge:* LLMs occasionally hallucinate unescaped characters (like literal newlines) inside JSON blocks, which fatally crashes standard `json.loads()` parsers and breaks the UI.
+   * *The Mitigation:* Our architecture utilizes a custom Regex-based parsing engine (`process_axp_response`). It forcefully isolates the JSON payload from the conversational text and utilizes relaxed strictness parsing, guaranteeing 100% frontend UI stability even if the LLM's formatting slightly degrades.
 
 ---
 
