@@ -38,3 +38,51 @@ flowchart TD
     classDef plain fill:#f9f9f9,stroke:#333,stroke-width:1px,color:#000;
     class AI,PL,MB,AXP,UCP plain;
     class A,axp_list,ucp_list,cat,rev,exp,com plain;
+
+
+
+Scenario 1: Product Discovery with Recommendation Engine
+
+sequenceDiagram
+    participant User
+    participant Agent as Apex Concierge
+    participant AXP as AXP Protocol
+    participant Backend as Merchant / Snowflake
+
+    User->>Agent: "Find me a good laptop for engineering."
+    Agent->>AXP: axp.searchProducts{query: "engineering laptop"}
+    AXP->>Backend: GET /catalog/search?q=engineering
+    Backend-->>AXP: Products[]
+    
+    rect rgb(240, 248, 255)
+        Note right of AXP: Context Enrichment
+        AXP->>Backend: GET /customer/profile (Loyalty, History)
+        Backend-->>AXP: Profile Data (Platinum Tier)
+        AXP->>Backend: GET /market/trends (Engineering workflows)
+        Backend-->>AXP: Trend Data (Thermal requirements)
+    end
+    
+    AXP-->>Agent: Products + Enriched Context
+    Agent-->>User: Renders Config Matrix & Recommendation
+
+
+
+
+Scenario 2: Configurable Product with Embedded Experience
+
+sequenceDiagram
+    participant User
+    participant Agent as Apex Concierge
+    participant AXP as AXP Protocol
+    participant Backend as Merchant Backend
+
+    User->>Agent: "Select the Apex Ultra 16"
+    Agent->>AXP: axp.getProductDetails{product_id: "ultra-16"}
+    AXP->>Backend: GET /products/ultra-16/specs
+    Backend-->>AXP: Spec Data (10-Core, 22hr, XDR)
+    
+    AXP->>Backend: GET /products/ultra-16/experience_assets
+    Backend-->>AXP: Hero Images & Feature Cards
+    
+    AXP-->>Agent: Product Payload + UI Assets
+    Agent-->>User: Renders Embedded Product Details UI
