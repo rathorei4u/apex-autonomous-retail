@@ -74,6 +74,67 @@ Operating as a Multi-Modal Agentic Concierge, Apex transcends traditional chatbo
 
 ## High-Level System Architecture
 
+## High-Level System Architecture
+
+The Apex platform is engineered on a rigid foundation of **Separation of Concerns**, dividing the architecture into five distinct, horizontally scalable planes. This topology ensures that cognitive reasoning is strictly decoupled from both the presentation layer and the underlying systems of record.
+
+### Enterprise Architecture Diagram
+
+```mermaid
+flowchart TB
+    subgraph Edge [1. Edge Experience Plane]
+        direction LR
+        V[Voice / ASR Input] --> UI[Headless UI Receiver]
+        T[Text / NLP Input] --> UI
+    end
+
+    subgraph Protocol [2. Protocol Control Plane]
+        direction LR
+        AXP[AXP: Agentic Experience Protocol] <--> UCP[UCP: Universal Checkout Protocol]
+    end
+
+    subgraph Cognitive [3. Cognitive Orchestration Plane]
+        direction TB
+        LG{LangGraph: Deterministic State Machine}
+        subgraph Swarms [CrewAI Specialized Micro-Swarms]
+            direction LR
+            D[Discovery] --- G[Governance] --- B[Fulfillment]
+        end
+        LLM((Claude 3.5 Sonnet))
+        LG <--> Swarms
+        Swarms <--> LLM
+    end
+
+    subgraph Integration [4. Integration & Security Plane]
+        direction LR
+        MCP[Model Context Protocol Bus] <--> ZT[Zero-Trust Access Control]
+    end
+
+    subgraph Backend [5. Enterprise Systems of Record]
+        direction LR
+        ERP[(ERP / Inventory API)]
+        OMS[(Order Management System)]
+        DWH[(Snowflake / Data Cloud)]
+    end
+
+    %% Routing
+    Edge <==>|UI State / Intents| Protocol
+    Protocol <==>|Strict JSON Payloads| Cognitive
+    Cognitive <==>|Tool Execution Requests| Integration
+    Integration <==>|Secure Queries / Mutations| Backend
+
+    %% Styling
+    classDef plane fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
+    classDef core fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a,rx:4px,ry:4px;
+    classDef node fill:#ffffff,stroke:#64748b,stroke-width:1px,color:#334155,rx:4px,ry:4px;
+    classDef db fill:#f0fdf4,stroke:#16a34a,stroke-width:1px,color:#14532d,rx:4px,ry:4px;
+
+    class Edge,Protocol,Cognitive,Integration,Backend plane;
+    class LG,Swarms,LLM,MCP core;
+    class V,T,UI,AXP,UCP,D,G,B,ZT node;
+    class ERP,OMS,DWH db;
+
+
 ### Building Blocks
 1.  **Multi-Modal Client:** Captures voice/text intents and renders deterministic UI components based on the agent's payload.
 2.  **Protocol Layer (AXP/UCP):** The standardized JSON contract governing all UI state changes and checkout sessions.
