@@ -45,12 +45,13 @@ Operating as a Multi-Modal Agentic Concierge, Apex transcends traditional chatbo
 
 ---
 
-## Key Features
-* **Multi-Modal Interaction:** Native Speech-to-Text integration allows users to navigate the entire commerce lifecycle hands-free via natural voice commands.
-* **Composite Agentic Brain:** Combines deterministic state routing (LangGraph) with dynamic, multi-agent collaboration (CrewAI) for complex problem-solving.
-* **Standardized Backend Execution:** Utilizes the open-source **Model Context Protocol (MCP)** to securely grant agents direct access to local systems, APIs, and databases without exposing raw credentials.
-* **Headless UI Generation:** The LLM outputs structured AXP/UCP payloads that dynamically render frontend components (Storefronts, Checkouts, Logistics Maps) in real-time.
-* **Autonomous Exception Handling:** The AI autonomously detects out-of-stock scenarios and negotiates loyalty-based upgrades without human intervention.
+## Key Strategic Capabilities
+
+* **Server-Driven Headless UI Generation:** Breaking free from static templates, the agentic engine acts as a real-time UI compiler. By emitting strict AXP/UCP protocol payloads, the system dynamically generates contextual, pixel-perfect frontend micro-components (Discovery Grids, Secure Checkouts, Live Logistics Maps) based purely on user intent.
+* **Composite Multi-Agent Orchestration:** A hybrid cognitive architecture that fuses LangGraph's deterministic, enterprise-grade state routing with CrewAI's dynamic swarm intelligence. This guarantees strict boundary control and hallucination-free execution while solving complex, multi-step commerce workflows.
+* **Zero-Trust Backend Execution via MCP:** Integrates the open-source **Model Context Protocol (MCP)** to establish a secure, standardized tooling bus. This provides agents with isolated, credential-less execution capabilities across legacy ERPs, proprietary APIs, and cloud databases without exposing the underlying infrastructure.
+* **Autonomous Supply Chain Governance:** Transcends simple rule-based engines. The swarm autonomously detects mid-flight supply chain disruptions (e.g., Out-of-Stock inventory), evaluates Snowflake Customer 360 profiles in real-time, and executes loyalty-funded upgrade resolutions—saving conversions without human-in-the-loop bottlenecks.
+* **Multi-Modal Ambient Commerce:** Frictionless, continuous intent recognition natively processes advanced Speech-to-Text alongside traditional text inputs. This transforms natural, conversational voice commands into immediate transactional payloads, enabling a truly hands-free, omnichannel commerce lifecycle.
 
 ---
 
