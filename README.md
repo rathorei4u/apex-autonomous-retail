@@ -178,16 +178,31 @@ To architect an enterprise-grade Agentic Commerce platform, we evaluated multipl
 
 ---
 
-## Agents Registry
-The architecture utilizes a localized Swarm model, orchestrated by LangGraph and executed by CrewAI:
-1.  **Discovery Swarm:** Enriches product searches with metadata, tables, and recommendations.
-2.  **Configuration Swarm:** Handles deep-dive specs for selected items.
-3.  **Recovery Swarm (Governance):** Manages OOS exceptions and loyalty point deductions.
-4.  **Checkout Swarm:** Prepares the UCP session and order review UI.
-5.  **Billing Swarm:** Executes the transaction and commits to Snowflake.
-6.  **Logistics Sentinel:** Monitors real-time shipping telemetrics via MCP carrier integrations.
-7.  **Fulfillment Swarm:** Handles mid-flight address interceptions and Snowflake profile updates.
-8.  **Support Swarm:** Manages post-sales document generation (Invoices/PDFs).
+## Agents Registry: The Autonomous Workforce
+
+To execute omnichannel workflows autonomously without hallucination, Apex Autonomous Retail utilizes a **Supervisor-Worker Paradigm**. 
+
+**LangGraph** acts as the Master Orchestrator (The Apex Concierge), evaluating the user's multi-modal intent and securely routing the execution context to a highly specialized squad of **5 Autonomous Core Agents**. Each agent has strict domain boundaries and specific access to enterprise backend tools via MCP.
+
+### 1. Product Discovery Agent
+* **Domain:** Catalog Intelligence & Recommendations
+* **Role:** Acts as the technical sales architect. It queries the product catalog via MCP, analyzes engineering/workflow requirements, and dynamically compiles the AXP payload to render the interactive Spec Matrix and recommendations on the frontend.
+
+### 2. Inventory & Governance Agent
+* **Domain:** Supply Chain Exceptions & Loyalty
+* **Role:** The highest-stakes agent in the flow. It performs real-time stock validations. If an Out-Of-Stock (OOS) exception occurs, it queries the Snowflake Customer 360 database to check the user's loyalty tier, autonomously calculates a resolution (e.g., a free hardware upgrade), and safely requests user authorization.
+
+### 3. Billing & Checkout Agent
+* **Domain:** Financial Transactions & Data Persistence
+* **Role:** Manages the Universal Checkout Protocol (UCP) session. It aggregates sub-totals, applies priority shipping logic, simulates the Apple Pay token exchange, and executes an idempotent, secure write-back of the final transaction payload into the Snowflake Data Cloud.
+
+### 4. Logistics & Fulfillment Agent
+* **Domain:** Carrier Integration & Profile Synchronization
+* **Role:** The post-sales sentinel. It monitors real-time shipping telemetry. When a user requests a mid-flight address change, this agent intercepts the logistics API to reroute the package and simultaneously syncs the new default address back to the user's Snowflake master profile.
+
+### 5. Post-Sales Support Agent
+* **Domain:** Document Generation & Communications
+* **Role:** Handles automated customer success workflows. Upon request, it queries the final order state to dynamically generate commercial tax invoices and PDF receipts, seamlessly delivering them to the user via the frontend UI.
 
 ---
 
