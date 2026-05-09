@@ -57,19 +57,19 @@ Operating as a Multi-Modal Agentic Concierge, Apex transcends traditional chatbo
 
 ## Core Technology Stack & Ecosystem Components
 
-### 🧠 The Brain (Cognitive Layer)
-* **LangGraph (The Orchestrator):** Provides deterministic macro-routing, state machines, and cyclic flow control. Ensures the user cannot skip from "Discovery" directly to "Payment" without authorization.
-* **CrewAI (The Collaborators):** Handles micro-level agent collaboration. When complex logic is required (e.g., negotiating an inventory exception), CrewAI spins up specialized sub-agents (Inventory Agent + Loyalty Agent) to reach a consensus.
-* **Anthropic Claude 3.5 Sonnet (The Core Engine):** The foundation model, chosen for superior JSON-adherence, tool-use capabilities, and rigorous Constitutional AI safety protocols.
+### 🧠 The Cognitive Layer (The Agentic Brain)
+* **LangGraph (Macro-Orchestrator):** Functions as the enterprise state machine. It enforces deterministic boundaries and strict acyclic flow control across the entire commerce lifecycle. This governance ensures absolute process compliance, preventing malicious or accidental state leaps (e.g., bypassing inventory validation to force a payment gateway trigger).
+* **CrewAI (Micro-Collaborators):** Drives decentralized swarm intelligence. When the system encounters multi-variable business logic (such as an out-of-stock supply chain exception), CrewAI dynamically instantiates localized, specialized sub-agents (e.g., Inventory, Pricing, and Loyalty Agents). These agents negotiate and reach an autonomous consensus before returning a unified resolution to the orchestrator.
+* **Anthropic Claude 3.5 Sonnet (Foundation Engine):** The underlying frontier model driving the cognitive reasoning. Selected specifically for its industry-leading JSON schema adherence, deterministic tool-calling accuracy, and rigorous Constitutional AI safety guardrails.
 
-### 🔌 The Integration & Data Layer
-* **Model Context Protocol (MCP):** The secure, standardized bridge. Instead of hardcoding API calls, MCP exposes local backend systems (Inventory, Pricing, Logistics) as standardized tools the AI can invoke autonomously.
-* **Snowflake Data Cloud:** Serves as the Customer 360 repository and immutable transaction vault, receiving live commits from the Billing and Fulfillment nodes.
+### 🔌 The Integration & Enterprise Data Layer
+* **Model Context Protocol (MCP):** The universal abstraction layer for secure backend execution. Rather than building brittle, point-to-point API integrations, MCP exposes enterprise infrastructure as secure, standardized tools. This establishes a zero-trust boundary, allowing agents to autonomously query and mutate backend systems without ever exposing raw database credentials.
+* **Enterprise Systems of Record (ERPs & Data Platforms):** The architecture is designed to integrate seamlessly with legacy and modern backend systems (Inventory Management, CRMs, OMS, and ERPs) to maintain a single source of truth for the commerce lifecycle. 
+*(Reference Implementation: For demonstration purposes, this architecture utilizes the **Snowflake Data Cloud** to simulate the unified Customer 360 repository and immutable transaction vault, ingesting live commits from the Billing and Fulfillment swarms).*
 
-### 🎤 The Experience Layer (Frontend)
-* **SpeechRecognition (Voice):** Captures local microphone audio, converts speech to text, and streams it into the Agentic intent engine.
-* **Streamlit:** Simulates a modern React/Next.js headless frontend via dynamic HTML/CSS injection.
-
+### 📱 The Experience Layer (Composable Frontend)
+* **Multi-Modal ASR (Speech-to-Text):** The ambient intent ingestion engine. It utilizes advanced Automatic Speech Recognition to stream continuous natural voice commands into the cognitive layer, bridging the gap between physical-world interactions and digital execution.
+* **Headless Presentation Receiver (Streamlit):** Simulates a modern, composable frontend aligned with MACH (Microservices, API-first, Cloud-native, Headless) architecture principles. It acts as a lightweight client-side consumer, translating dynamic HTML/CSS protocol payloads into responsive, pixel-perfect UI components in real time.
 ---
 
 ## High-Level System Architecture
