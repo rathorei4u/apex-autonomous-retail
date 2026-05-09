@@ -78,6 +78,15 @@ Operating as a Multi-Modal Agentic Concierge, Apex transcends traditional chatbo
 
 The Apex platform is engineered on a rigid foundation of **Separation of Concerns**, dividing the architecture into five distinct, horizontally scalable planes. This topology ensures that cognitive reasoning is strictly decoupled from both the presentation layer and the underlying systems of record.
 
+### Architectural Building Blocks
+
+1. **The Edge Experience Plane:** A lightweight, client-side receiver devoid of hardcoded commerce logic. It ingests multi-modal intents (Voice/Text) and dynamically compiles its UI based exclusively on inbound JSON directives.
+2. **The Protocol Control Plane (AXP/UCP):** The API contract layer. It enforces schema validation on all payloads exiting the cognitive engine, ensuring that malformed LLM outputs never reach the client.
+3. **The Cognitive Orchestration Plane:** The hybrid intelligence core. It relies on a "Manager-Worker" paradigm, where the deterministic state machine controls the global conversational state, and dynamically instantiates specialized sub-agents to resolve isolated workflows.
+4. **The Integration & Security Plane:** A unified API gateway powered by the **Model Context Protocol (MCP)**. It acts as a firewall between the LLM and enterprise infrastructure, translating semantic agent requests into standardized, authenticated network requests.
+5. **The Enterprise Systems of Record:** The underlying master data systems (ERPs, OMS, Snowflake Customer 360) that act as the immutable source of truth for inventory, pricing, and historical transactions.
+
+
 ### Enterprise Architecture Diagram
 
 ```mermaid
@@ -133,6 +142,8 @@ flowchart TB
     class LG,Swarms,LLM,MCP core;
     class V,T,UI,AXP,UCP,D,G,B,ZT node;
     class ERP,OMS,DWH db;
+```
+
 
 
 ### Building Blocks
