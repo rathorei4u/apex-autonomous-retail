@@ -13,219 +13,172 @@ These recommendations are grounded in composable, headless engineering principle
 
 ---
 
-## 📑 Table of Contents
-1. [Executive Summary](#-executive-summary)
-2. [Key Features](#-key-features)
-3. [Core Technology Stack](#-core-technology-stack)
-4. [High-Level System Architecture](#-high-level-system-architecture)
-5. [Agentic Flow & Collaboration](#-agentic-flow-a2a-collaboration--resolution)
-6. [Design & Architecture Deep Dive](#-design--architecture-deep-dive)
-7. [Enterprise Standards](#-enterprise-standards)
-8. [Getting Started (Run the Demo)](#-getting-started)
+# 🛍️ Apex Autonomous Retail: Enterprise Agentic Commerce
+
+## Table of Contents
+1. [Executive Summary](#executive-summary)
+2. [Key Features](#key-features)
+3. [Core Technology Stack & Ecosystem Components](#core-technology-stack--ecosystem-components)
+4. [High-Level System Architecture](#high-level-system-architecture)
+5. [Agents Registry](#agents-registry)
+6. [Memory & State Management](#memory--state-management)
+7. [Agents Communication](#agents-communication)
+8. [Observability & Evaluation](#observability--evaluation)
+9. [Security & Governance](#security--governance)
+10. [Flow Diagrams](#flow-diagrams)
+11. [Agentic Flow & Collaboration](#agentic-flow--collaboration)
+12. [Design & Architecture Deep Dive](#design--architecture-deep-dive)
+13. [Enterprise Standards](#enterprise-standards)
+14. [Getting Started (Run the Demo)](#getting-started-run-the-demo)
 
 ---
 
-## 📖 Executive Summary
-Generative AI is advancing rapidly, shifting the paradigm from "LLMs as text generators" to "LLMs as system orchestrators." 
+## Executive Summary
+Apex Autonomous Retail represents a paradigm shift from traditional, passive e-commerce to **Omnichannel Agentic Commerce**. By decoupling the frontend presentation layer from backend logic, we have introduced a headless, protocol-driven architecture (AXP + UCP). 
 
-Apex Autonomous Commerce is a production-grade Reference Architecture that decouples conversational UI from enterprise business logic using a **Supervisor-Worker Paradigm**. Designed as a vendor-agnostic, scalable alternative to rigid CRM chatbots, this system utilizes **LangGraph** as a stateful orchestrator that delegates complex supply chain and commerce intents to specialized **CrewAI Swarms**. 
-
-These swarms communicate via strict **A2A (Agent-to-Agent) JSON protocols** and autonomously navigate complex business logic—including Out-of-Stock (OOS) recovery, proactive logistics rerouting, and ERP write-backs—without human intervention, while maintaining a premium conversational interface.
+Powered by a composite "Brain" (LangGraph + CrewAI + Claude 3.5), the platform acts as an **Agentic Concierge**. It accepts Multi-Modal inputs (Voice and Text), executes secure backend actions via the **Model Context Protocol (MCP)**, dynamically generates pixel-perfect UI components, autonomously resolves inventory exceptions, and seamlessly writes transaction telemetry to the Snowflake Data Cloud.
 
 ---
 
-## 🌟 Key Features
-* **Multi-Modal Voice Integration:** Seamlessly transition between text and speech-to-text (Whisper/SpeechRecognition) at the edge, maintaining continuous agentic context.
-* **Controllable Autonomy (HITL):** LangGraph checkpointers freeze execution before critical ERP or payment actions, enforcing strict enterprise governance and manager sign-off.
-* **Dynamic UI Generation:** The AI doesn't just return text; it triggers rich Streamlit components (product cards, metric dashboards) based on real-time data retrieval.
-* **Asynchronous Omni-Channel:** Agents act independently in the background, firing off Slack notifications to fulfillment centers without needing explicit user instruction.
+## Key Features
+* **Multi-Modal Interaction:** Native Speech-to-Text integration allows users to navigate the entire commerce lifecycle hands-free via natural voice commands.
+* **Composite Agentic Brain:** Combines deterministic state routing (LangGraph) with dynamic, multi-agent collaboration (CrewAI) for complex problem-solving.
+* **Standardized Backend Execution:** Utilizes the open-source **Model Context Protocol (MCP)** to securely grant agents direct access to local systems, APIs, and databases without exposing raw credentials.
+* **Headless UI Generation:** The LLM outputs structured AXP/UCP payloads that dynamically render frontend components (Storefronts, Checkouts, Logistics Maps) in real-time.
+* **Autonomous Exception Handling:** The AI autonomously detects out-of-stock scenarios and negotiates loyalty-based upgrades without human intervention.
 
 ---
 
-## 🏗️ Core Technology Stack
-* **Reasoning Engine:** Anthropic Claude 3.5 Sonnet (Optimized for complex tool calling).
-* **Experience Layer (UI):** Streamlit (Multi-Modal Voice + Chat, Headless, Dynamic UI generation).
-* **State & Governance (The Supervisor):** LangGraph (Manages session memory, contextual routing, and Human-in-the-Loop checkpoints).
-* **Agentic Collaboration (The Workers):** CrewAI (Creates specialized agent crews that debate and collaborate to resolve edge cases).
-* **Integration Standard (The Bridge):** Model Context Protocol (MCP) servers (Provides a standardized, secure bridge to enterprise APIs).
-* **Data Lakehouse:** Snowflake (Customer 360, Live Inventory, Order Management).
+## Core Technology Stack & Ecosystem Components
+
+### 🧠 The Brain (Cognitive Layer)
+* **LangGraph (The Orchestrator):** Provides deterministic macro-routing, state machines, and cyclic flow control. Ensures the user cannot skip from "Discovery" directly to "Payment" without authorization.
+* **CrewAI (The Collaborators):** Handles micro-level agent collaboration. When complex logic is required (e.g., negotiating an inventory exception), CrewAI spins up specialized sub-agents (Inventory Agent + Loyalty Agent) to reach a consensus.
+* **Anthropic Claude 3.5 Sonnet (The Core Engine):** The foundation model, chosen for superior JSON-adherence, tool-use capabilities, and rigorous Constitutional AI safety protocols.
+
+### 🔌 The Integration & Data Layer
+* **Model Context Protocol (MCP):** The secure, standardized bridge. Instead of hardcoding API calls, MCP exposes local backend systems (Inventory, Pricing, Logistics) as standardized tools the AI can invoke autonomously.
+* **Snowflake Data Cloud:** Serves as the Customer 360 repository and immutable transaction vault, receiving live commits from the Billing and Fulfillment nodes.
+
+### 🎤 The Experience Layer (Frontend)
+* **SpeechRecognition (Voice):** Captures local microphone audio, converts speech to text, and streams it into the Agentic intent engine.
+* **Streamlit:** Simulates a modern React/Next.js headless frontend via dynamic HTML/CSS injection.
 
 ---
 
-## 📐 High-Level System Architecture
+## High-Level System Architecture
 
-This architecture ensures high fault tolerance and modularity. The orchestrator routes user intents to the correct swarm, ensuring the top-of-funnel Sales Swarm is completely isolated from the backend Logistics Swarm.
+### Building Blocks
+1.  **Multi-Modal Client:** Captures voice/text intents and renders deterministic UI components based on the agent's payload.
+2.  **Protocol Layer (AXP/UCP):** The standardized JSON contract governing all UI state changes and checkout sessions.
+3.  **The Agentic Orchestrator:** LangGraph routes the intent to the correct CrewAI Swarm.
+4.  **MCP Tooling Bus:** The security boundary where Agents request data (e.g., "Check Inventory") via MCP servers connected to the Merchant Backend.
+5.  **Data Vault:** Snowflake integration for persistent storage of orders and customer profiles.
 
-```mermaid
-graph TD
-    %% Define Styles
-    classDef ui fill:#f9f6fa,stroke:#d6b4fc,stroke-width:2px;
-    classDef orchestrator fill:#e6f2ff,stroke:#6baed6,stroke-width:2px;
-    classDef crew fill:#e2f0cb,stroke:#8bd346,stroke-width:2px;
-    classDef mcp fill:#ffe6cc,stroke:#ffb347,stroke-width:2px;
-    classDef data fill:#f4f4f8,stroke:#a6a6a6,stroke-width:2px;
-
-    subgraph Client [Experience Layer]
-        UI[Streamlit Multi-Modal UI<br/>Voice / Text / Dynamic Widgets]:::ui
-    end
-
-    subgraph Orchestration [LangGraph Orchestrator]
-        SM[Supervisor Node<br/>Intent Routing & State Memory]:::orchestrator
-        HITL[Governance Checkpoint<br/>Manager Approval Node]:::orchestrator
-    end
-
-    subgraph Swarms [CrewAI Specialized Swarms]
-        SC[Sales & Discovery Crew<br/>Agents: Concierge, Upseller]:::crew
-        RC[Fulfillment Recovery Crew<br/>Agents: Inventory Analyst, Margin Calculator]:::crew
-        LC[Post-Purchase Crew<br/>Agents: Policy Enforcer, Logistics Sentinel]:::crew
-    end
-
-    subgraph Integration [MCP Protocol Layer]
-        MCPS[Snowflake MCP Server]:::mcp
-        MCPE[ERP / Payment MCP Server]:::mcp
-        MCPSL[Slack / Comms MCP Server]:::mcp
-    end
-
-    subgraph Enterprise [Data Platform]
-        SNOW[(Snowflake Data Cloud)]:::data
-        ERP[(External ERP)]:::data
-    end
-
-    %% Connections
-    UI <-->|User Input / UI Render| SM
-    SM -->|Delegate via A2A Protocol| SC
-    SM -->|Delegate via A2A Protocol| RC
-    SM -->|Delegate via A2A Protocol| LC
-    
-    SC & RC & LC <-->|Execute Tools| Integration
-    
-    MCPS <-->|Live Queries| SNOW
-    MCPE <-->|Transactions| ERP
-    
-    RC -.->|Triggers Pause| HITL
-    HITL -.->|Resume Execution| RC
-```
+### Design Options & Rationale
+We explicitly chose a **Composite Architecture (LangGraph + CrewAI)** over a single framework. Enterprise commerce requires **deterministic boundaries** alongside **fluid problem solving**. LangGraph governs the strict state transitions (the "guardrails"), while CrewAI manages the intra-node negotiations (the "thinking"). Integrating **MCP** standardizes how these agents interact with enterprise backends, future-proofing the architecture as new databases or APIs are added.
 
 ---
 
-## 🔄 Agentic Flow: A2A Collaboration & Resolution
-
-**Demo Scenario:** A VIP B2B customer wants to order laptops, but the primary warehouse is out of stock. Instead of dropping the sale, the LangGraph Supervisor wakes up the Fulfillment Recovery Crew. The Inventory Agent and Margin Agent debate via A2A communication, agreeing to absorb upgrade costs using loyalty points to save the deal. The system then pauses for Human-in-the-Loop (HITL) approval.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User
-    participant LG as LangGraph Supervisor
-    box rgb(226, 240, 203) CrewAI: Fulfillment Recovery Swarm
-        participant IA as Inventory Agent
-        participant MA as Margin Agent
-    end
-    participant MCP as MCP Layer (Snowflake)
-    participant UI as Streamlit UI (HITL)
-
-    User->>LG: "I need 50 Apex M5 Laptops for the new branch."
-    LG->>LG: Update State (Intent: Bulk Order)
-    LG->>IA: Delegate Task (JSON Payload: sku=APEX-1001, qty=50)
-    
-    rect rgb(240, 248, 255)
-        Note over IA, MCP: A2A Data Gathering & Debate
-        IA->>MCP: check_inventory(sku=APEX-1001)
-        MCP-->>IA: {"WH-1": 0, "WH-2": 0}
-        IA->>MA: A2A: "Out of stock. Advise on free upgrade to Ultra model."
-        MA->>MCP: get_customer_profile(customer_id)
-        MCP-->>MA: {"tier": "Platinum", "Loyalty": "2,450 pts"}
-        MA->>IA: A2A: "Approved. Deduct 200 points to preserve margin."
-    end
-
-    IA->>LG: Return Resolution Plan (JSON: Free Upgrade, Deduct 200 points)
-    
-    LG->>UI: ⚠️ HITL PAUSE: Margin Exception Detected
-    Note over User, UI: Manager reviews the CrewAI debate log in the UI.
-    User->>UI: Clicks "Approve Override"
-    UI->>LG: Resume execution
-    
-    LG->>MCP: process_payment() & update_order_with_upgrade()
-    LG-->>User: Render Rich Cart UI Component & Confirmation
-```
+## Agents Registry
+The architecture utilizes a localized Swarm model, orchestrated by LangGraph and executed by CrewAI:
+1.  **Discovery Swarm:** Enriches product searches with metadata, tables, and recommendations.
+2.  **Configuration Swarm:** Handles deep-dive specs for selected items.
+3.  **Recovery Swarm (Governance):** Manages OOS exceptions and loyalty point deductions.
+4.  **Checkout Swarm:** Prepares the UCP session and order review UI.
+5.  **Billing Swarm:** Executes the transaction and commits to Snowflake.
+6.  **Logistics Sentinel:** Monitors real-time shipping telemetrics via MCP carrier integrations.
+7.  **Fulfillment Swarm:** Handles mid-flight address interceptions and Snowflake profile updates.
+8.  **Support Swarm:** Manages post-sales document generation (Invoices/PDFs).
 
 ---
 
-## 🧠 Design & Architecture Deep Dive
-
-### Design Options
-When designing multi-agent systems, architects must choose between Decentralized Swarms (agents operating independently) and Centralized Orchestrators. 
-**Our Approach:** We utilize a **Centralized ReAct Orchestrator**. LangGraph acts as the state machine (`stage_manager_node`), dictating the bounds of the conversation, while Claude is given autonomy *within* those bounds to select MCP tools.
-
-### Agents Registry
-Instead of disparate scripts, the system relies on dynamic personas executed by the primary reasoning engine:
-- **Concierge Agent:** Handles discovery, configuration, and upsells (ApexCare+).
-- **Recovery Swarm Agent:** Authorized to perform margin-aware resolutions (e.g., deducting 200 Loyalty Points for an Ultra upgrade).
-- **Logistics Sentinel Agent:** Monitors external carrier telemetry and executes reroutes (e.g., bypassing a Memphis storm via DHL).
-- **Policy Enforcer Agent:** Validates warehouse picking status before executing instant ERP cancellations.
-
-### Memory
-The architecture utilizes a Dual-Memory design to prevent "Agent Amnesia":
-1. **Short-Term (Conversational Context):** Managed by LangGraph's `OrderState`, tracking the `messages` array and dynamic intent variables (like `active_sku`) throughout a single session.
-2. **Long-Term (Persistent Context):** Managed via the `manage_customer_memory` MCP tool, allowing agents to store facts (e.g., "Traveling on Friday") back to the Enterprise Database for future interactions.
-
-### Agents Communication
-Communication is handled via a **Shared State Schema** (The "Digital Folder"). Rather than passing raw strings between agents, the system passes a typed dictionary containing the conversation history, the active SKU, and the customer ID. This allows tools (like `process_payment` and `create_order`) to execute transactionally based on shared context.
+## Memory & State Management
+* **Short-Term (Session Memory):** LangGraph's `MemorySaver` combined with a strict `OrderState` TypedDict tracks conversational history and the active `axp_payload`.
+* **Long-Term (Persistent Memory):** Real-time integration with **Snowflake Data Cloud**. Customer preferences and order history are committed directly to Snowflake tables (`CUST_PROFILE_360`, `COMPUTE_WH`).
 
 ---
 
-## 🛡️ Enterprise Standards
-
-### Governance
-To prevent AI hallucination during critical transactions (like taking payments), the `stage_manager_node` enforces strict transitions. The AI cannot access the "Post-Purchase" tools (like `update_delivery_address`) until the Stage Manager confirms the "Intake" stage is complete.
-
-### Security
-- **API Boundary:** The LLM does not write SQL. It communicates exclusively via bounded Python functions (MCP tools).
-- **Authentication:** Model access is secured via API keys (or corporate LLM Gateways) managed securely in `.env` files.
-- **Data Privacy:** PII and addresses are fetched dynamically during the session and are never hardcoded into the system prompts.
-
-### Observability
-Agentic workflows are naturally opaque. This architecture implements a "Glass-Box" observability pattern. 
-By utilizing Streamlit's sidebar, all Agent-to-Agent (A2A) communications and MCP Tool executions are surfaced to the UI in real-time, allowing engineers and stakeholders to verify that the AI is executing the `check_inventory` or `update_delivery_address` tools securely.
-
-### Evaluation
-Testing multi-agent systems requires simulating full business lifecycles rather than single prompts. This repository evaluates success across a 4-turn journey:
-1. Intent Recognition & Config.
-2. Transaction Execution & Conflict Recovery.
-3. Proactive Telemetry Monitoring.
-4. Transactional Write-Backs (Address Updates/Invoicing).
+## Agents Communication
+Agents do not communicate via unstructured text. 
+* **Internal Communication:** CrewAI agents collaborate using shared context windows and delegated tasks.
+* **External Communication:** Agents retrieve data by invoking **MCP Tools**. 
+* **Frontend Communication:** Agents mutate the UI by outputting strict **AXP/UCP JSON Payloads**.
 
 ---
 
-## 🚀 Getting Started
+## Observability & Evaluation
+* **State Telemetry:** Every transition in the LangGraph state machine updates a `Network Status` indicator in the frontend UI.
+* **MCP Audit Logs:** Because all backend requests pass through the Model Context Protocol, IT security teams have a centralized audit trail of exactly which databases the AI queried.
 
-### Prerequisites
-* Python 3.12+
-* [uv](https://docs.astral.sh/uv/) (Fast Python package installer)
+---
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/YourUsername/apex-autonomous-retail.git](https://github.com/YourUsername/apex-autonomous-retail.git)
-   cd apex-autonomous-retail
-   ```
-2. Set up the virtual environment and install dependencies:
-   ```bash
-   uv venv
-   source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-   uv add SpeechRecognition streamlit langchain-anthropic langgraph python-dotenv
-   ```
-3. Configure Environment Variables:
-   Create a `.env` file in the root directory and add your API keys:
-   ```env
-   ANTHROPIC_API_KEY=your_claude_key_here
-   ```
+## Security & Governance
+*Enterprise Panel Highlight:* Frontier models introduce unique security challenges. This architecture implements robust mitigations:
 
-### Running the Demo
-Start the Streamlit Experience Layer:
-```bash
-uv run streamlit run app.py
-```
+1.  **Constitutional AI / Dark Pattern Avoidance:** During development, Anthropics's safety filters rejected prompts that simulated inventory scarcity, identifying it as a deceptive "Dark Pattern." We mitigated this by utilizing strict internal testing prompts and framing the scenario securely, proving deep understanding of LLM alignment.
+2.  **MCP Security Boundaries:** By using the Model Context Protocol, the LLM never sees raw API keys or database passwords. It simply asks the local MCP server to execute a tool, ensuring the host system maintains absolute access control.
+3.  **Bulletproof Payload Parsing:** LLMs occasionally hallucinate unescaped characters. Our architecture utilizes a custom Regex-based parsing engine (`process_axp_response`) to forcefully separate JSON payloads from conversational text, ensuring UI stability.
+
+---
+
+## Flow Diagrams
+Detailed sequence diagrams mapping the AXP and UCP protocol handoffs between the User, the Agentic Orchestrator, and the Merchant Backend can be found in our comprehensive documentation:
+👉 **[View Full Architecture Flow Diagrams](docs/flow-diagrams.md)**
+
+---
+
+## Agentic Flow & Collaboration
+The central `routing_logic` acts as the Swarm Manager. Instead of relying on the LLM to choose its own next step (which causes hallucination in commerce flows), we use keyword/intent mapping against the user's latest Multi-Modal interaction. 
+This deterministic routing guarantees that a Discovery Agent cannot accidentally execute a Billing function, providing enterprise-grade reliability.
+
+---
+
+## Design & Architecture Deep Dive
+### The Server-Driven Agentic UI
+The frontend contains no hardcoded product pages. Instead, the `render_html_storefront()` function acts as a receiver. When the LLM outputs `"axp_action": "render_recovery"`, the frontend dynamically constructs the HTML/CSS Grid for the Exception/Concierge card. 
+
+### Voice Integration
+The application utilizes a background threaded `SpeechRecognition` module. It captures local mic input, transcribes it via advanced audio models, and injects it directly into the LangGraph state machine, allowing the user to browse, review, and authorize payments without touching a keyboard.
+
+---
+
+## Enterprise Standards
+* **Idempotency:** Billing and Fulfillment swarms execute Snowflake commits idempotently, preventing duplicate orders.
+* **Stateless Microservices:** The LangGraph backend operates completely statelessly. The entire context is passed via `OrderState`.
+* **Data Privacy:** No PII is included in the AI system prompts. Addresses and Order IDs are dynamically fetched via MCP and merged into the UI at the presentation layer.
+
+---
+
+## Getting Started (Run the Demo)
+
+To launch the Apex Agentic Commerce demonstration locally:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/rathorei4u/apex-autonomous-retail.git](https://github.com/rathorei4u/apex-autonomous-retail.git)
+    cd apex-autonomous-retail
+    ```
+
+2.  **Set up the environment:**
+    Ensure you have your API keys ready (e.g., `ANTHROPIC_API_KEY`, Snowflake credentials). Create a `.env` file in the root directory.
+
+3.  **Run the orchestrator:**
+    We use `uv` (or pip) for dependency management and Streamlit for the headless UI simulation.
+    ```bash
+    uv run streamlit run app.py
+    ```
+
+4.  **Execute the Golden Path Demo:**
+    Interact with the Apex Concierge (via text or voice) using the following sequence:
+    * *"Find me a good laptop for engineering."*
+    * *"Select the Apex Ultra 16."*
+    * *"Looks perfect. Let's checkout."*
+    * *"Yes, I authorize the upgrade."*
+    * *"I've paid with Apple Pay."*
+    * *"Track my order."*
+    * *"Actually, I'm working from the San Francisco office tomorrow. Can you change the delivery address?"*
+    * *"Great. Please email me the invoice."*
 
 ### 🗣️ Demo Script
 To experience the full Multi-Agent capability, follow this flow in the UI:
