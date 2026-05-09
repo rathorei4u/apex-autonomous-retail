@@ -34,36 +34,7 @@ flowchart TD
 
     AI --> PL
     PL --> MB
-  
+    
     classDef plain fill:#f9f9f9,stroke:#333,stroke-width:1px,color:#000;
     class AI,PL,MB,AXP,UCP plain;
     class A,axp_list,ucp_list,cat,rev,exp,com plain;
-
-
-
-
-
-Scenario 1: Product Discovery with Recommendation Engine
-The agent searches for products and enriches the response with loyalty data, customer profiles, and market trends.
-
-sequenceDiagram
-    participant User
-    participant Agent as Apex Concierge
-    participant AXP as AXP Protocol
-    participant Backend as Merchant / Snowflake
-
-    User->>Agent: "Find me a good laptop for engineering."
-    Agent->>AXP: axp.searchProducts{query: "engineering laptop"}
-    AXP->>Backend: GET /catalog/search?q=engineering
-    Backend-->>AXP: Products[]
-    
-    rect rgb(240, 248, 255)
-        Note right of AXP: Context Enrichment
-        AXP->>Backend: GET /customer/profile (Loyalty, History)
-        Backend-->>AXP: Profile Data (Platinum Tier)
-        AXP->>Backend: GET /market/trends (Engineering workflows)
-        Backend-->>AXP: Trend Data (Thermal requirements)
-    end
-    
-    AXP-->>Agent: Products + Enriched Context
-    Agent-->>User: Renders Config Matrix & Recommendation
