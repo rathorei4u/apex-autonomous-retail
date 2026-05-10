@@ -91,59 +91,73 @@ The Apex platform is engineered on a rigid foundation of **Separation of Concern
 
 ```mermaid
 graph TD
-    %% Styling
-    classDef layer fill:#f9f9fb,stroke:#d0d0d5,stroke-width:2px,stroke-dasharray: 5 5;
-    classDef core fill:#0071e3,stroke:#005bb5,stroke-width:2px,color:#fff;
-    classDef agent fill:#ffffff,stroke:#0071e3,stroke-width:2px;
-    classDef tool fill:#e3f2fd,stroke:#64b5f6,stroke-width:2px;
-    classDef llm fill:#4caf50,stroke:#388e3c,stroke-width:2px,color:#fff;
+    %% Styling Definitions for LucidChart
+    classDef plane fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef edge fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    classDef protocol fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef brain fill:#ede7f6,stroke:#4527a0,stroke-width:3px;
+    classDef crewai fill:#fce4ec,stroke:#c2185b,stroke-width:3px;
+    classDef worker fill:#ffffff,stroke:#4527a0,stroke-width:2px;
+    classDef mcp fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef sor fill:#ffebee,stroke:#c62828,stroke-width:2px;
+    classDef inference fill:#e0f7fa,stroke:#006064,stroke-width:2px;
 
-    subgraph Layer1 ["1. Experience Layer"]
-        UI[Streamlit Headless UI]
-        AXP[AXP Protocol JSON Payload]
-        UI <--> AXP
+    %% 1. The Edge Experience Plane
+    subgraph Plane1 ["1. The Edge Experience Plane"]
+        Input[Multi-modal Intents<br/>(Voice / Text)]:::edge
+        UI[Lightweight Client Receiver<br/>Streamlit UI - No Hardcoded Logic]:::edge
+        Input --> UI
     end
-    class Layer1 layer;
+    class Plane1 plane;
 
-    subgraph Layer2 ["2. Orchestration Layer"]
-        LG[LangGraph State Machine]:::core
-        State[(OrderState Checkpointer)]:::tool
-        LG <--> State
+    %% 2. The Protocol Control Plane
+    subgraph Plane2 ["2. The Protocol Control Plane (AXP/UCP)"]
+        AXP[API Contract Layer<br/>Schema Validation & JSON Directives]:::protocol
+        UI <-->|Dynamic UI Directives| AXP
     end
-    class Layer2 layer;
+    class Plane2 plane;
 
-    subgraph Layer3 ["3. Agentic Layer (Hybrid Framework)"]
-        DA[Discovery Agent<br/>LangChain]:::agent
-        IGA[Inventory Governance Swarm<br/>CrewAI Multi-Agent]:::agent
-        BA[Billing Agent<br/>LangChain]:::agent
-        LA[Logistics Agent<br/>LangChain]:::agent
-        SA[Support Agent<br/>LangChain]:::agent
+    %% 3. The Cognitive Orchestration Plane
+    subgraph Plane3 ["3. The Cognitive Orchestration Plane (Hybrid Core)"]
+        Brain[THE BRAIN<br/>LangGraph Orchestrator<br/>(Deterministic Manager)]:::brain
+        State[(In-Memory Checkpointer<br/>MemorySaver)]:::brain
+        
+        Brain <-->|Maintains Global State| State
+        
+        subgraph Workers ["The Workers (Specialized Sub-Agents)"]
+            DA[Discovery Agent<br/>(LangChain)]:::worker
+            GA[Governance Agent<br/>THE CREW AI SWARM]:::crewai
+            BA[Billing Agent<br/>(LangChain)]:::worker
+            LA[Logistics Agent<br/>(LangChain)]:::worker
+            SA[Support Agent<br/>(LangChain)]:::worker
+        end
+        
+        Brain -->|Instantiates & Routes| DA & GA & BA & LA & SA
     end
-    class Layer3 layer;
-
-    subgraph Layer4 ["4. Integration & Tooling Layer (MCP & RAG)"]
-        RAG[(Vector DB Mock<br/>Catalog Context)]:::tool
-        SF[Snowflake MCP<br/>Transactions & CUST_360]:::tool
-        DHL[DHL API MCP<br/>Live Telemetry]:::tool
-    end
-    class Layer4 layer;
-
-    subgraph Layer5 ["5. Cognitive Inference Layer"]
-        Claude[Anthropic Claude 4.6 Sonnet]:::llm
-    end
-    class Layer5 layer;
-
-    %% Data Flow
-    AXP <--> LG
-    LG --> DA & IGA & BA & LA & SA
+    class Plane3 plane;
     
-    DA -.->|Retrieves Context| RAG
-    IGA -.->|Checks Points| SF
-    BA -.->|Commits Payment| SF
-    LA -.->|Syncs Profile| SF
-    LA -.->|Intercepts Package| DHL
+    AXP <-->|Validated Payloads| Brain
 
-    DA & IGA & BA & LA & SA ===>|Inference Requests| Claude
+    %% 4. The Integration & Security Plane
+    subgraph Plane4 ["4. The Integration & Security Plane"]
+        MCP[MCP Unified API Gateway<br/>Firewall & Semantic Translator]:::mcp
+        DA & GA & BA & LA & SA -.->|Semantic Requests| MCP
+    end
+    class Plane4 plane;
+
+    %% 5. The Enterprise Systems of Record
+    subgraph Plane5 ["5. The Enterprise Systems of Record"]
+        SF[(Snowflake Customer 360<br/>Immutable Source of Truth)]:::sor
+        ERP[(Enterprise ERP & OMS)]:::sor
+        VDB[(Vector DB / RAG)]:::sor
+        
+        MCP <-->|Authenticated Network Requests| SF & ERP & VDB
+    end
+    class Plane5 plane;
+
+    %% Cognitive Inference Engine
+    Claude[Anthropic Claude 4.6 Sonnet<br/>Cognitive Intelligence Engine]:::inference
+    Workers ===>|Inference API Calls| Claude
 ```
 
 ## Design Options & Strategic Rationale
