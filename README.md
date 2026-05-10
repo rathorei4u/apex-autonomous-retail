@@ -98,40 +98,40 @@ graph TD
     classDef tool fill:#e3f2fd,stroke:#64b5f6,stroke-width:2px;
     classDef llm fill:#4caf50,stroke:#388e3c,stroke-width:2px,color:#fff;
 
-    subgraph "1. Experience Layer"
+    subgraph Layer1 ["1. Experience Layer"]
         UI[Streamlit Headless UI]
         AXP[AXP Protocol JSON Payload]
         UI <--> AXP
     end
-    class "1. Experience Layer" layer;
+    class Layer1 layer;
 
-    subgraph "2. Orchestration Layer"
+    subgraph Layer2 ["2. Orchestration Layer"]
         LG[LangGraph State Machine]:::core
         State[(OrderState Checkpointer)]:::tool
         LG <--> State
     end
-    class "2. Orchestration Layer" layer;
+    class Layer2 layer;
 
-    subgraph "3. Agentic Layer (Hybrid Framework)"
+    subgraph Layer3 ["3. Agentic Layer (Hybrid Framework)"]
         DA[Discovery Agent<br/>LangChain]:::agent
         IGA[Inventory Governance Swarm<br/>CrewAI Multi-Agent]:::agent
         BA[Billing Agent<br/>LangChain]:::agent
         LA[Logistics Agent<br/>LangChain]:::agent
         SA[Support Agent<br/>LangChain]:::agent
     end
-    class "3. Agentic Layer (Hybrid Framework)" layer;
+    class Layer3 layer;
 
-    subgraph "4. Integration & Tooling Layer (MCP & RAG)"
+    subgraph Layer4 ["4. Integration & Tooling Layer (MCP & RAG)"]
         RAG[(Vector DB Mock<br/>Catalog Context)]:::tool
         SF[Snowflake MCP<br/>Transactions & CUST_360]:::tool
         DHL[DHL API MCP<br/>Live Telemetry]:::tool
     end
-    class "4. Integration & Tooling Layer (MCP & RAG)" layer;
+    class Layer4 layer;
 
-    subgraph "5. Cognitive Inference Layer"
+    subgraph Layer5 ["5. Cognitive Inference Layer"]
         Claude[Anthropic Claude 4.6 Sonnet]:::llm
     end
-    class "5. Cognitive Inference Layer" layer;
+    class Layer5 layer;
 
     %% Data Flow
     AXP <--> LG
