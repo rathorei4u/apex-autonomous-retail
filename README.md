@@ -90,58 +90,60 @@ The Apex platform is engineered on a rigid foundation of **Separation of Concern
 ### Enterprise Architecture Diagram
 
 ```mermaid
-flowchart TB
-    subgraph Edge [1. Edge Experience Plane]
-        direction LR
-        V[Voice / ASR Input] --> UI[Headless UI Receiver]
-        T[Text / NLP Input] --> UI
-    end
-
-    subgraph Protocol [2. Protocol Control Plane]
-        direction LR
-        AXP[AXP: Agentic Experience Protocol] <--> UCP[UCP: Universal Checkout Protocol]
-    end
-
-    subgraph Cognitive [3. Cognitive Orchestration Plane]
-        direction TB
-        LG{LangGraph: Deterministic State Machine}
-        subgraph Swarms [CrewAI Specialized Micro-Swarms]
-            direction LR
-            D[Discovery] --- G[Governance] --- B[Fulfillment]
-        end
-        LLM((Claude 3.5 Sonnet))
-        LG <--> Swarms
-        Swarms <--> LLM
-    end
-
-    subgraph Integration [4. Integration & Security Plane]
-        direction LR
-        MCP[Model Context Protocol Bus] <--> ZT[Zero-Trust Access Control]
-    end
-
-    subgraph Backend [5. Enterprise Systems of Record]
-        direction LR
-        ERP[(ERP / Inventory API)]
-        OMS[(Order Management System)]
-        DWH[(Snowflake / Data Cloud)]
-    end
-
-    %% Routing
-    Edge <==>|UI State / Intents| Protocol
-    Protocol <==>|Strict JSON Payloads| Cognitive
-    Cognitive <==>|Tool Execution Requests| Integration
-    Integration <==>|Secure Queries / Mutations| Backend
-
+graph TD
     %% Styling
-    classDef plane fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,color:#0f172a,rx:8px,ry:8px;
-    classDef core fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a,rx:4px,ry:4px;
-    classDef node fill:#ffffff,stroke:#64748b,stroke-width:1px,color:#334155,rx:4px,ry:4px;
-    classDef db fill:#f0fdf4,stroke:#16a34a,stroke-width:1px,color:#14532d,rx:4px,ry:4px;
+    classDef layer fill:#f9f9fb,stroke:#d0d0d5,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef core fill:#0071e3,stroke:#005bb5,stroke-width:2px,color:#fff;
+    classDef agent fill:#ffffff,stroke:#0071e3,stroke-width:2px;
+    classDef tool fill:#e3f2fd,stroke:#64b5f6,stroke-width:2px;
+    classDef llm fill:#4caf50,stroke:#388e3c,stroke-width:2px,color:#fff;
 
-    class Edge,Protocol,Cognitive,Integration,Backend plane;
-    class LG,Swarms,LLM,MCP core;
-    class V,T,UI,AXP,UCP,D,G,B,ZT node;
-    class ERP,OMS,DWH db;
+    subgraph "1. Experience Layer"
+        UI[Streamlit Headless UI]
+        AXP[AXP Protocol JSON Payload]
+        UI <--> AXP
+    end
+    class "1. Experience Layer" layer;
+
+    subgraph "2. Orchestration Layer"
+        LG[LangGraph State Machine]:::core
+        State[(OrderState Checkpointer)]:::tool
+        LG <--> State
+    end
+    class "2. Orchestration Layer" layer;
+
+    subgraph "3. Agentic Layer (Hybrid Framework)"
+        DA[Discovery Agent<br/>LangChain]:::agent
+        IGA[Inventory Governance Swarm<br/>CrewAI Multi-Agent]:::agent
+        BA[Billing Agent<br/>LangChain]:::agent
+        LA[Logistics Agent<br/>LangChain]:::agent
+        SA[Support Agent<br/>LangChain]:::agent
+    end
+    class "3. Agentic Layer (Hybrid Framework)" layer;
+
+    subgraph "4. Integration & Tooling Layer (MCP & RAG)"
+        RAG[(Vector DB Mock<br/>Catalog Context)]:::tool
+        SF[Snowflake MCP<br/>Transactions & CUST_360]:::tool
+        DHL[DHL API MCP<br/>Live Telemetry]:::tool
+    end
+    class "4. Integration & Tooling Layer (MCP & RAG)" layer;
+
+    subgraph "5. Cognitive Inference Layer"
+        Claude[Anthropic Claude 4.6 Sonnet]:::llm
+    end
+    class "5. Cognitive Inference Layer" layer;
+
+    %% Data Flow
+    AXP <--> LG
+    LG --> DA & IGA & BA & LA & SA
+    
+    DA -.->|Retrieves Context| RAG
+    IGA -.->|Checks Points| SF
+    BA -.->|Commits Payment| SF
+    LA -.->|Syncs Profile| SF
+    LA -.->|Intercepts Package| DHL
+
+    DA & IGA & BA & LA & SA ===>|Inference Requests| Claude
 ```
 
 ## Design Options & Strategic Rationale
