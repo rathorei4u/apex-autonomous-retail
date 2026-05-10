@@ -132,7 +132,12 @@ graph TD
             SA["Support Agent<br/>(LangChain)"]:::worker
         end
         
-        Brain -->|"Instantiates & Routes"| DA & GA & BA & LA & SA
+        %% Explicit routing lines to avoid GitHub parsing errors
+        Brain -->|"Instantiates & Routes"| DA
+        Brain -->|"Instantiates & Routes"| GA
+        Brain -->|"Instantiates & Routes"| BA
+        Brain -->|"Instantiates & Routes"| LA
+        Brain -->|"Instantiates & Routes"| SA
     end
     class Plane3 plane;
     
@@ -141,7 +146,13 @@ graph TD
     %% 4. The Integration & Security Plane
     subgraph Plane4 ["4. The Integration & Security Plane"]
         MCP["MCP Unified API Gateway<br/>Firewall & Semantic Translator"]:::mcp
-        DA & GA & BA & LA & SA -.->|"Semantic Requests"| MCP
+        
+        %% Explicit semantic requests to MCP
+        DA -.->|"Semantic Requests"| MCP
+        GA -.->|"Semantic Requests"| MCP
+        BA -.->|"Semantic Requests"| MCP
+        LA -.->|"Semantic Requests"| MCP
+        SA -.->|"Semantic Requests"| MCP
     end
     class Plane4 plane;
 
@@ -151,7 +162,22 @@ graph TD
         ERP[("Enterprise ERP & OMS")]:::sor
         VDB[("Vector DB / RAG")]:::sor
         
-        MCP <-->|"Authenticated Network Requests"| SF & ERP & VDB
+        %% Explicit network requests from MCP
+        MCP <-->|"Authenticated Network Requests"| SF
+        MCP <-->|"Authenticated Network Requests"| ERP
+        MCP <-->|"Authenticated Network Requests"| VDB
+    end
+    class Plane5 plane;
+
+    %% Cognitive Inference Engine
+    Claude["Anthropic Claude 4.6 Sonnet<br/>Cognitive Intelligence Engine"]:::inference
+    
+    %% Explicit inference calls
+    DA ===>|"Inference API Calls"| Claude
+    GA ===>|"Inference API Calls"| Claude
+    BA ===>|"Inference API Calls"| Claude
+    LA ===>|"Inference API Calls"| Claude
+    SA ===>|"Inference API Calls"| Claude
 ```
 
 ## Design Options & Strategic Rationale
