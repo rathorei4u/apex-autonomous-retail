@@ -91,7 +91,7 @@ The Apex platform is engineered on a rigid foundation of **Separation of Concern
 
 ```mermaid
 graph TD
-    %% Styling Definitions for LucidChart
+    %% Styling Definitions for GitHub
     classDef plane fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,stroke-dasharray: 5 5;
     classDef edge fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
     classDef protocol fill:#fff3e0,stroke:#e65100,stroke-width:2px;
@@ -104,60 +104,54 @@ graph TD
 
     %% 1. The Edge Experience Plane
     subgraph Plane1 ["1. The Edge Experience Plane"]
-        Input[Multi-modal Intents<br/>(Voice / Text)]:::edge
-        UI[Lightweight Client Receiver<br/>Streamlit UI - No Hardcoded Logic]:::edge
+        Input["Multi-modal Intents<br/>(Voice / Text)"]:::edge
+        UI["Lightweight Client Receiver<br/>Streamlit UI - No Hardcoded Logic"]:::edge
         Input --> UI
     end
     class Plane1 plane;
 
     %% 2. The Protocol Control Plane
     subgraph Plane2 ["2. The Protocol Control Plane (AXP/UCP)"]
-        AXP[API Contract Layer<br/>Schema Validation & JSON Directives]:::protocol
-        UI <-->|Dynamic UI Directives| AXP
+        AXP["API Contract Layer<br/>Schema Validation & JSON Directives"]:::protocol
+        UI <-->|"Dynamic UI Directives"| AXP
     end
     class Plane2 plane;
 
     %% 3. The Cognitive Orchestration Plane
     subgraph Plane3 ["3. The Cognitive Orchestration Plane (Hybrid Core)"]
-        Brain[THE BRAIN<br/>LangGraph Orchestrator<br/>(Deterministic Manager)]:::brain
-        State[(In-Memory Checkpointer<br/>MemorySaver)]:::brain
+        Brain["THE BRAIN<br/>LangGraph Orchestrator<br/>(Deterministic Manager)"]:::brain
+        State[("In-Memory Checkpointer<br/>MemorySaver")]:::brain
         
-        Brain <-->|Maintains Global State| State
+        Brain <-->|"Maintains Global State"| State
         
         subgraph Workers ["The Workers (Specialized Sub-Agents)"]
-            DA[Discovery Agent<br/>(LangChain)]:::worker
-            GA[Governance Agent<br/>THE CREW AI SWARM]:::crewai
-            BA[Billing Agent<br/>(LangChain)]:::worker
-            LA[Logistics Agent<br/>(LangChain)]:::worker
-            SA[Support Agent<br/>(LangChain)]:::worker
+            DA["Discovery Agent<br/>(LangChain)"]:::worker
+            GA["Governance Agent<br/>THE CREW AI SWARM"]:::crewai
+            BA["Billing Agent<br/>(LangChain)"]:::worker
+            LA["Logistics Agent<br/>(LangChain)"]:::worker
+            SA["Support Agent<br/>(LangChain)"]:::worker
         end
         
-        Brain -->|Instantiates & Routes| DA & GA & BA & LA & SA
+        Brain -->|"Instantiates & Routes"| DA & GA & BA & LA & SA
     end
     class Plane3 plane;
     
-    AXP <-->|Validated Payloads| Brain
+    AXP <-->|"Validated Payloads"| Brain
 
     %% 4. The Integration & Security Plane
     subgraph Plane4 ["4. The Integration & Security Plane"]
-        MCP[MCP Unified API Gateway<br/>Firewall & Semantic Translator]:::mcp
-        DA & GA & BA & LA & SA -.->|Semantic Requests| MCP
+        MCP["MCP Unified API Gateway<br/>Firewall & Semantic Translator"]:::mcp
+        DA & GA & BA & LA & SA -.->|"Semantic Requests"| MCP
     end
     class Plane4 plane;
 
     %% 5. The Enterprise Systems of Record
     subgraph Plane5 ["5. The Enterprise Systems of Record"]
-        SF[(Snowflake Customer 360<br/>Immutable Source of Truth)]:::sor
-        ERP[(Enterprise ERP & OMS)]:::sor
-        VDB[(Vector DB / RAG)]:::sor
+        SF[("Snowflake Customer 360<br/>Immutable Source of Truth")]:::sor
+        ERP[("Enterprise ERP & OMS")]:::sor
+        VDB[("Vector DB / RAG")]:::sor
         
-        MCP <-->|Authenticated Network Requests| SF & ERP & VDB
-    end
-    class Plane5 plane;
-
-    %% Cognitive Inference Engine
-    Claude[Anthropic Claude 4.6 Sonnet<br/>Cognitive Intelligence Engine]:::inference
-    Workers ===>|Inference API Calls| Claude
+        MCP <-->|"Authenticated Network Requests"| SF & ERP & VDB
 ```
 
 ## Design Options & Strategic Rationale
